@@ -32,10 +32,8 @@ class PostCommentsViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """Возвращаем queryset комментариев для запрошенного поста."""
-        post_id = self.kwargs.get('post_id')
-        post = get_object_or_404(Post, id=post_id)
-        return Comment.objects.filter(post=post).select_related(
-            'author', 'post')
+        post = get_object_or_404(Post, id=self.kwargs['post_id'])
+        return post.comments.all().select_related('author')
 
     def perform_create(self, serializer):
         """Установка автора и связанного поста при создании комментария."""
